@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CGPA Calculator</title>
+
+<!-- Internal CSS -->
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background: white;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 450px;
+
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    color: gray;
+}
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+
+    border-radius: 8px;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.reset {
+    background: #dc3545;
+}
+
+.reset:hover {
+    background: #b02a37;
+}
+
+.subject-box {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+#result {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>CGPA Calculator</h2>
+<p>Calculate your CGPA using Grades & Credits </p>
+
+<!-- Previous CGPA -->
+<label>Previous CGPA</label>
+<input type="number" id="prevCgpa" step="0.01" value="0">
+
+<label>Previous Credits</label>
+<input type="number" id="prevCredit" step="0.1" value="0">
+
+<!-- Number of Subjects -->
+<label>Number of Subjects</label>
+<input type="number" id="subjectCount" min="1" max="15">
+
+<button onclick="generateSubjects()">Generate Subjects</button>
+
+<hr>
+
+<!-- Subjects -->
+<div id="subjectsArea"></div>
+
+<!-- Buttons -->
+<div class="btn-group">
+<button onclick="calculateCGPA()">Calculate</button>
+<button class="reset" onclick="resetAll()">Reset</button>
+</div>
+
+<!-- Result -->
+<div id="result"></div>
+
+</div>
+
+
+<!-- Internal JavaScript -->
+<script>
+
+function generateSubjects() {
+
+    let count = document.getElementById("subjectCount").value;
+    let area = document.getElementById("subjectsArea");
+
+    area.innerHTML = "";
+
+    if (count <= 0) {
+        alert("Enter valid subject count");
+        return;
+    }
+
+    for (let i = 1; i <= count; i++) {
+
+        area.innerHTML += `
+        <div class="subject-box">
+
+            <h3>Subject #${i}</h3>
+
+            <label>Grade</label>
+            <select class="grade">
+                <option value="10">O (10)</option>
+                <option value="9">A+ (9)</option>
+                <option value="8">A (8)</option>
+                <option value="7">B+ (7)</option>
+                <option value="6">B (6)</option>
+                <option value="5">C (5)</option>
+                <option value="0">U (0)</option>
+            </select>
+
+            <label>Credit</label>
+            <input type="number" class="credit" step="0.5" value="4">
+
+        </div>
+        `;
+    }
+}
+
+
+function calculateCGPA() {
+
+    let grades = document.querySelectorAll(".grade");
+    let credits = document.querySelectorAll(".credit");
+
+    let prevCgpa = parseFloat(document.getElementById("prevCgpa").value);
+    let prevCredit = parseFloat(document.getElementById("prevCredit").value);
+
+    let totalPoints = prevCgpa * prevCredit;
+    let totalCredits = prevCredit;
+
+    if (grades.length === 0) {
+        alert("Generate subjects first!");
+        return;
+    }
+
+    for (let i = 0; i < grades.length; i++) {
+
+        let g = parseFloat(grades[i].value);
+        let c = parseFloat(credits[i].value);
+
+        if (isNaN(c) || c <= 0) {
+            alert("Enter valid credits");
+            return;
+        }
+
+        totalPoints += g * c;
+        totalCredits += c;
+    }
+
+    let cgpa = (totalPoints / totalCredits).toFixed(2);
+
+    document.getElementById("result").innerText =
+        "Your CGPA is: " + cgpa;
+}
+
+
+function resetAll() {
+
+    document.getElementById("prevCgpa").value = 0;
+    document.getElementById("prevCredit").value = 0;
+    document.getElementById("subjectCount").value = "";
+
+    document.getElementById("subjectsArea").innerHTML = "";
+    document.getElementById("result").innerText = "";
+}
+
+</script>
+
+</body>
+</html>
