@@ -29,8 +29,6 @@ A simple web-based CGPA Calculator using HTML, CSS, and JavaScript.
 cgpa-calculator/
 │
 ├── index.html
-├── style.css
-├── script.js
 ├── README.md
 └── LICENSE
 
